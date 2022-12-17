@@ -1,0 +1,6 @@
+matplotlib
+numpy
+praat-parselmouth
+pedalboard
+numpy
+pvrecorder
