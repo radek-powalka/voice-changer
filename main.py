@@ -1,44 +1,82 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from pedalboard import Pedalboard, PitchShift, HighShelfFilter
-from pedalboard.io import AudioFile
-import parselmouth
-from parselmouth.praat import call
-from plotter import Plotter
+from microRecorder import MicroRecorder
+from voiceChanger import VoiceChanger
+
+pedalboard_test = {
+    "semitones": 4,
+    "cutoff_freq_hz": 300,
+    "gain_db": 6
+}
+
+pedalboard_tomek = {
+    "cutoff_freq_hz": 300,
+    "gain_db": 7,
+    "q": 1.5,
+    "drive_db": 3,
+    "semitones": -12
+}
+
+print("Audio sources:")
+audio_sources = ["1. Existing file", "2. Record", "3. TTS"]
+print(audio_sources)
+while True:
+    source = input("Choose audio source: ")
+    if source == "1":
+        while True:
+            fname = input("Path: ")
+            if fname.endswith(".wav"):
+                break
+            print("Choose .wav file")
+        voiceChanger = VoiceChanger(fname)
+        break
+
+    elif source == "2":
+        recorder = MicroRecorder("ass")
+        recorder.check_devices()
+        fname = recorder.record()
+        voiceChanger = VoiceChanger(fname)
+        break
+
+manipulation_options = ["1. Pedalboard", "2. Praat"]
+print(manipulation_options)
+while True:
+    manipulation = int(input("Choose a package: "))
+
+    if manipulation == 1:
+        print("Presets available for Pedalboard:")
+        pedalboard_presets = ["1. Test", "2. Tomek"]
+        print(pedalboard_presets)
+        while True:
+            preset = int(input("Choose a preset: "))
+            if preset == 1:
+                voiceChanger.pedalboard_manipulation("Test", semitones=pedalboard_test["semitones"],
+                                                     cutoff_freq_hz=pedalboard_test["cutoff_freq_hz"],
+                                                     gain_db=pedalboard_test["gain_db"])
+                break
+            elif preset == 2:
+                voiceChanger.pedalboard_manipulation("Tomek", semitones=pedalboard_tomek["semitones"],
+                                                     cutoff_freq_hz=pedalboard_tomek["cutoff_freq_hz"],
+                                                     gain_db=pedalboard_tomek["gain_db"],
+                                                     q=pedalboard_tomek["q"],
+                                                     drive_db=pedalboard_tomek["drive_db"])
+                break
+        break
+    elif manipulation == 2:
+        voiceChanger.praat_manipulation()
+        break
 
 
-# wczytanie pliku audio
-with AudioFile("Tomasz_Piwowarski.wav") as f:
-    audio = f.read(f.frames)
-    samplerate = f.samplerate
+# def voice_changer(function, preset, txt):
+#     elif function == "record":
+#         # Radek tu wklei funkcję do nagrywania
+#     board=pedalboard(preset)
 
-# utworzenie pedalboarda podnoszącego wysokość głosu
-board = Pedalboard([PitchShift(semitones=4), HighShelfFilter(cutoff_frequency_hz=300, gain_db=6)])
-
-# zastosowanie wczytanych efektów na wybranym pliku
-effected = board(audio, samplerate)
-
-# zapisanie zmodulowanego pliku
-with AudioFile("processed-output1.wav", "w", samplerate, effected.shape[0]) as f:
-    f.write(effected)
-
-
-# wykorzystanie pitch shiftera z biblioteki praat-parselmouth
-sound = parselmouth.Sound("Tomasz_Piwowarski.wav")
-factor = 1.25
-manipulation = call(sound, "To Manipulation", 0.01, 75, 600)
-pitch_tier = call(manipulation, "Extract pitch tier")
-call(pitch_tier, "Multiply frequencies", sound.xmin, sound.xmax, factor)
-call([pitch_tier, manipulation], "Replace pitch tier")
-sound_up = call(manipulation, "Get resynthesis (overlap-add)")
-sound_up.save("processed-output2.wav", "WAV")
-
-
+#
+#
 # porównanie nagrań zmodyfikowanych za pomocą biblioteki Pedalboard
-pedalboard_analysis = Plotter("processed-output1.wav")
-pedalboard_analysis.draw_intensity()
-pedalboard_analysis.draw_pitch()
-praat_analysis = Plotter("processed-output2.wav")
-praat_analysis.draw_intensity()
-praat_analysis.draw_pitch()
-plt.show()
+# pedalboard_analysis = Plotter("processed-output1.wav")
+# pedalboard_analysis.draw_intensity()
+# pedalboard_analysis.draw_pitch()
+# praat_analysis = Plotter("ass.wav")
+# praat_analysis.draw_intensity()
+# praat_analysis.draw_pitch()
+# plt.show()
