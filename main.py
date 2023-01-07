@@ -1,5 +1,6 @@
 from microRecorder import MicroRecorder
 from voiceChanger import VoiceChanger
+from run_tts import get_tts
 
 pedalboard_test = {
     "semitones": 4,
@@ -30,10 +31,16 @@ while True:
         break
 
     elif source == "2":
-        recorder = MicroRecorder("ass")
+        recorder = MicroRecorder("RecordedVoice")
         recorder.check_devices()
         fname = recorder.record()
         voiceChanger = VoiceChanger(fname)
+        break
+
+    elif source == "3":
+        user_text = input("Type your text: ")
+        get_tts(user_text)
+        voiceChanger = VoiceChanger("TTS_PL.wav")
         break
 
 manipulation_options = ["1. Pedalboard", "2. Praat"]
