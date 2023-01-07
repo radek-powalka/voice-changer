@@ -12,7 +12,7 @@ class Plotter:
         self.Snd = parselmouth.Sound(filename)
 
     # rysowanie spektrogramu
-    def draw_spectrogram(self, dynamic_range=70):
+    def draw_spectrogram(self, title, dynamic_range=70):
         fig = plt.figure()
         spectrogram = self.Snd.to_spectrogram()
         x, y = spectrogram.x_grid(), spectrogram.y_grid()
@@ -21,6 +21,7 @@ class Plotter:
         plt.ylim([spectrogram.ymin, spectrogram.ymax])
         plt.xlabel("Czas [s]")
         plt.ylabel("Częstotliwość [Hz]")
+        plt.title(title)
         return fig
 
     # rysowanie przebiegu natężenia
@@ -37,8 +38,8 @@ class Plotter:
         return fig
 
     # rysowanie częstotliwości podstawowej głosu
-    def draw_pitch(self):
-        fig = self.draw_spectrogram()
+    def draw_pitch(self, title):
+        fig = self.draw_spectrogram(title)
         pitch = self.Snd.to_pitch()
         pitch_values = pitch.selected_array['frequency']  # pobranie przebiegu f0
         pitch_values[pitch_values == 0] = np.nan  # zastąpienie fragmentów bez głosu wartościami NaN

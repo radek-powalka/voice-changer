@@ -3,12 +3,14 @@ from pedalboard.io import AudioFile
 import parselmouth
 from parselmouth.praat import call
 
+
 class VoiceChanger:
 
     Filename = None
 
     def __init__(self, filename):
         self.Filename = filename
+
     def pedalboard_manipulation(self, preset, **kwargs):
         # wczytanie pliku audio
         with AudioFile(self.Filename) as f:
@@ -35,7 +37,7 @@ class VoiceChanger:
             f.write(effected)
 
     # wykorzystanie pitch shiftera z biblioteki praat-parselmouth
-    def praat_manipulation(self):
+    def praat_manipulation(self, **kwargs):
         sound = parselmouth.Sound(self.Filename)
         factor = 1.5
         manipulation = call(sound, "To Manipulation", 0.01, 75, 600)
