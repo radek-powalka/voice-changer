@@ -37,9 +37,16 @@ class VoiceChanger:
             f.write(effected)
 
     # wykorzystanie pitch shiftera z biblioteki praat-parselmouth
-    def praat_manipulation(self, **kwargs):
+    def praat_manipulation(self, preset, **kwargs):
         sound = parselmouth.Sound(self.Filename)
-        factor = 1.5
+
+        if preset == "Male":
+            factor = 0.6
+        elif preset == "Female":
+            factor = 1.75
+        elif preset == "User":
+            factor = kwargs.get("factor")
+
         manipulation = call(sound, "To Manipulation", 0.01, 75, 600)
         pitch_tier = call(manipulation, "Extract pitch tier")
         call(pitch_tier, "Multiply frequencies", sound.xmin, sound.xmax, factor)
