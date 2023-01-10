@@ -1,4 +1,4 @@
-from pedalboard import Pedalboard, PitchShift, HighShelfFilter, LowShelfFilter, Distortion
+from pedalboard import Pedalboard, PitchShift, HighShelfFilter, LowShelfFilter, Distortion, Reverb
 from pedalboard.io import AudioFile
 import parselmouth
 from parselmouth.praat import call
@@ -17,17 +17,20 @@ class VoiceChanger:
             audio = f.read(f.frames)
             samplerate = f.samplerate
 
-        # utworzenie pedalboarda podnoszącego wysokość głosu
+        # utworzenie pedalboarda dla wybranego presetu
         if preset == "Test":
-            board = Pedalboard([PitchShift(semitones=kwargs.get("semitones")),
+            board = Pedalboard([PitchShift(semitones=kwargs.get("semitones_test")),
                                 HighShelfFilter(cutoff_frequency_hz=kwargs.get("cutoff_freq_hz"),
                                                 gain_db=kwargs.get("gain_db"))])
-        elif preset == "Tomek":
+        elif preset == "Anonymous TV speaker":
             board = Pedalboard([LowShelfFilter(cutoff_frequency_hz=kwargs.get("cutoff_freq_hz"),
                                                gain_db=kwargs.get("gain_db"),
                                                q=kwargs.get("gain_db")),
                                 Distortion(drive_db=kwargs.get("drive_db")),
                                 PitchShift(semitones=kwargs.get("semitones"))])
+        elif preset == "Child":
+            board = Pedalboard([PitchShift(semitones=kwargs.get("semitones_child")),
+                                Reverb(room_size=kwargs.get("room_size"))])
 
         # zastosowanie wczytanych efektów na wybranym pliku
         effected = board(audio, samplerate)

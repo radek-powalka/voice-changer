@@ -51,7 +51,7 @@ while True:
     # wybór ustawień przygotowanych dla biblioteki Pedalboard wg których nagranie zostanie zmodyfikowane
     if manipulation == "0":
         print("Presets available for Pedalboard:")
-        pedalboard_presets = ["1. Test", "2. Tomek"]
+        pedalboard_presets = ["Test", "Anonymous TV speaker", "Child (with reverb)"]
 
         for index, preset in enumerate(pedalboard_presets):
             print(f"[{index}] {preset}")
@@ -59,12 +59,15 @@ while True:
         while True:
             preset = input("Choose a preset: ")
             if preset == "0":
-                voiceChanger.pedalboard_manipulation("Test", semitones=4, cutoff_freq_hz=300,
+                voiceChanger.pedalboard_manipulation("Test", semitones_test=4, cutoff_freq_hz=300,
                                                      gain_db=6)
                 break
             elif preset == "1":
-                voiceChanger.pedalboard_manipulation("Tomek", semitones=-1, cutoff_freq_hz=300, gain_db=7,
+                voiceChanger.pedalboard_manipulation("Anonymous TV speaker", semitones=-1, cutoff_freq_hz=300, gain_db=7,
                                                      q=1.5, drive_db=3)
+                break
+            elif preset == "2":
+                voiceChanger.pedalboard_manipulation("Child", semitones_child=4, room_size=0.6)
                 break
 
         processed_fname = "pedalboard-processed-output.wav"
