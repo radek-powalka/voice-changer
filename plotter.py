@@ -6,7 +6,7 @@ import parselmouth
 # klasa zawierająca metody tworzące wykresy pomocne w analizie głosu
 class Plotter:
 
-    Snd = None
+    Snd = None  # pole, do którego przypisywany jest wybrany przez użytkownika plik audio
 
     def __init__(self, filename):
         self.Snd = parselmouth.Sound(filename)
@@ -19,8 +19,8 @@ class Plotter:
         sg_db = 10 * np.log10(spectrogram.values)
         plt.pcolormesh(x, y, sg_db, vmin=sg_db.max() - dynamic_range, cmap='afmhot')
         plt.ylim([spectrogram.ymin, spectrogram.ymax])
-        plt.xlabel("Czas [s]")
-        plt.ylabel("Częstotliwość [Hz]")
+        plt.xlabel("Time [s]")
+        plt.ylabel("Frequency [Hz]")
         plt.title(title)
         return fig
 
@@ -33,7 +33,7 @@ class Plotter:
         plt.plot(intensity.xs(), intensity.values.T, linewidth=1)
         plt.grid(False)
         plt.ylim(0)
-        plt.ylabel("Natężenie [dB]")
+        plt.ylabel("Intensity [dB]")
         plt.xlim([self.Snd.xmin, self.Snd.xmax])
         return fig
 
@@ -48,5 +48,5 @@ class Plotter:
         plt.plot(pitch.xs(), pitch_values, 'o', markersize=2)
         plt.grid(False)
         plt.ylim(0, pitch.ceiling)
-        plt.ylabel("Częstotliwość podstawowa [Hz]")
+        plt.ylabel("Fundamental frequency [Hz]")
         return fig

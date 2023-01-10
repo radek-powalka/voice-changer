@@ -7,7 +7,7 @@ from pvrecorder import PvRecorder
 class MicroRecorder:
 
 	Audio = []
-	DeviceIndex = 0
+	DeviceIndex = 0 # indeks urządzenia, które zostanie użyte do nagrywania
 	Filename = None
 
 	def __init__(self, filename):
@@ -22,7 +22,7 @@ class MicroRecorder:
 
 	def record(self):
 		filename = self.Filename + ".wav"
-		pvr = PvRecorder(device_index=self.DeviceIndex,  frame_length=1024)  # Device_index jest ID urzadzenia ktory bedzie uzywane do nagrywania
+		pvr = PvRecorder(device_index=self.DeviceIndex,  frame_length=1024)
 		pvr.start()
 		print("Recording... (press space to stop)")
 		while True:
